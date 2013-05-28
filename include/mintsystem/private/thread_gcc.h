@@ -1,6 +1,8 @@
 #ifndef __MINTSYSTEM_PRIVATE_THREAD_GCC_H__
 #define __MINTSYSTEM_PRIVATE_THREAD_GCC_H__
 
+#include <pthread.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

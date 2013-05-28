@@ -22,7 +22,7 @@ extern double mint_timer_ticksToSeconds;
 
 void mint_timer_initialize();
 
-MINT_C_INLINE mint_timer_is_initialized()
+MINT_C_INLINE int mint_timer_is_initialized()
 {
     return mint_timer_secondsToTicks != 0;
 }

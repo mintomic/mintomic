@@ -1,6 +1,8 @@
 #ifndef __MINTOMIC_PRIVATE_CORE_GCC_H__
 #define __MINTOMIC_PRIVATE_CORE_GCC_H__
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
