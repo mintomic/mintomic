@@ -1,5 +1,5 @@
-#ifndef __MINTTHREADS_PRIVATE_THREAD_GCC_H__
-#define __MINTTHREADS_PRIVATE_THREAD_GCC_H__
+#ifndef __MINTSYSTEM_PRIVATE_THREAD_GCC_H__
+#define __MINTSYSTEM_PRIVATE_THREAD_GCC_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,4 +23,4 @@ MINT_C_INLINE int mint_thread_join(mint_thread_t thread, void **retval)
 } // extern "C"
 #endif
 
-#endif // __MINTTHREADS_PRIVATE_THREAD_GCC_H__
+#endif // __MINTSYSTEM_PRIVATE_THREAD_GCC_H__

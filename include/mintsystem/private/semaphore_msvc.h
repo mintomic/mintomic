@@ -1,5 +1,5 @@
-#ifndef __MINTTHREADS_PRIVATE_SEMAPHORE_MSVC_H__
-#define __MINTTHREADS_PRIVATE_SEMAPHORE_MSVC_H__
+#ifndef __MINTSYSTEM_PRIVATE_SEMAPHORE_MSVC_H__
+#define __MINTSYSTEM_PRIVATE_SEMAPHORE_MSVC_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,4 +37,4 @@ MINT_C_INLINE int mint_sem_wait(mint_sem_t *sem)
 } // extern "C"
 #endif
 
-#endif // __MINTTHREADS_PRIVATE_SEMAPHORE_MSVC_H__
+#endif // __MINTSYSTEM_PRIVATE_SEMAPHORE_MSVC_H__

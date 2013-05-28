@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <mintpack/timewaster.h>
-#include <mintthreads/timer.h>
+#include <mintsystem/timer.h>
 
 
 typedef bool TestEntryFunc(int numThreads);
@@ -50,9 +50,9 @@ int main()
         TestInfo& info = g_testInfos[i];
         printf("[%d/%d] Test \"%s\"...", i + 1, numTests, info.description);
 
-        mint_timer_tick start = mint_timer_get();
+        mint_timer_tick_t start = mint_timer_get();
         bool success = info.func(info.numThreads);
-        mint_timer_tick end = mint_timer_get();
+        mint_timer_tick_t end = mint_timer_get();
 
         const char* status = success ? "pass" : info.allowFailure ? "fail (allowed)" : "*** FAIL ***";
         printf(" %s, %.3f ms\n", status, (end - start) * mint_timer_ticksToSeconds * 1000);

@@ -1,4 +1,4 @@
-#include <mintthreads/timer.h>
+#include <mintsystem/timer.h>
 
 
 double mint_timer_ticksToSeconds = 0;

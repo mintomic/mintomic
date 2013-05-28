@@ -1,30 +1,26 @@
 #ifndef __MINTPACK_RANDOM_H__
 #define __MINTPACK_RANDOM_H__
 
-#include <mintomic/core.h>
+#include <mintomic/mintomic.h>
 
 
 //-------------------------------------
-//  PseudoRandomNumberGenerator
-//  Implements the Mersenne Twister, a PRNG with good randomness
-//  in a small number of instructions.
+//  PRNG that seeds itself using various information from the environment.
+//  generate() is uniformly distributed across all 32-bit integer values.
+//  generateUnique() returns unique integers 2^32 times in a row, then repeats the sequence.
 //-------------------------------------
-#define MT_IA  397
-#define MT_LEN 624
-
-class PseudoRandomNumberGenerator
+class Random
 {
-    uint32_t m_buffer[MT_LEN];
-    int m_index;
+private:
+    static const int kNumOffsets = 8;
+    static mint_atomic32_t m_sharedCounter;
+    uint32_t m_value;
+    uint32_t m_offsets[kNumOffsets];
 
 public:
-    PseudoRandomNumberGenerator(uint32_t seed = -1);
-    // Declare noinline so that the function call acts as a compiler barrier
-    MINT_NO_INLINE uint32_t generateInt32();
-    inline uint64_t generateInt64()
-    {
-        return ((uint64_t) generateInt32() << 32) | generateInt32();
-    }
+    Random();
+    uint32_t generate();
+    uint32_t generateUnique();
 };
 
 

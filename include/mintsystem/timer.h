@@ -1,5 +1,5 @@
-#ifndef __MINTTHREADS_TIMER_H__
-#define __MINTTHREADS_TIMER_H__
+#ifndef __MINTSYSTEM_TIMER_H__
+#define __MINTSYSTEM_TIMER_H__
 
 #include <mintomic/core.h>
 
@@ -11,4 +11,4 @@
     #error Unsupported platform!
 #endif
 
-#endif // __MINTTHREADS_TIMER_H__
+#endif // __MINTSYSTEM_TIMER_H__

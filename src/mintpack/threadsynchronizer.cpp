@@ -1,5 +1,5 @@
 #include <mintpack/threadsynchronizer.h>
-#include <mintthreads/timer.h>
+#include <mintsystem/timer.h>
 #include <mintomic/mintomic.h>
 
 
@@ -8,7 +8,7 @@ void* ThreadSynchronizer::threadStart(void* param)
     ThreadInfo* info = (ThreadInfo*) param;
     ThreadSynchronizer *synchronizer = info->parent;
     int threadNum = (int) (info - synchronizer->m_threadInfos);
-    mint_timer_tick spinLimit = (mint_timer_tick) (0.00001 * mint_timer_secondsToTicks);
+    mint_timer_tick_t spinLimit = (mint_timer_tick_t) (0.00001 * mint_timer_secondsToTicks);
 
     for (;;)
     {
@@ -20,23 +20,25 @@ void* ThreadSynchronizer::threadStart(void* param)
         // and there's more than one thread to kick. Effectively we yield CPU back to the main thread
         // before spinning.
         mint_sleep_millis(0);
-        mint_timer_tick start = mint_timer_get();
-        mint_fetch_add_32_relaxed(&synchronizer->m_syncRemaining, -1);
-        mint_thread_fence_release();
-        for (;;)
+        mint_timer_tick_t start = mint_timer_get();
+        uint32_t newCount = mint_fetch_add_32_relaxed(&synchronizer->m_syncRemaining, -1);
+        while (newCount > 0)
         {
-            if (mint_load_32_relaxed(&synchronizer->m_syncRemaining) == 0)
-                break;
             if (mint_timer_get() - start >= spinLimit)
             {
                 mint_sleep_millis(0);
                 start = mint_timer_get();
             }
             mint_yield_hw_thread();
-            mint_thread_fence_acquire();
+            if (mint_load_32_relaxed(&synchronizer->m_syncRemaining) == 0)
+                break;
         }
 
+        start = mint_timer_get();
         synchronizer->m_threadFunc(threadNum);
+        mint_timer_tick_t end = mint_timer_get();
+        info->runningTime = end - start;
+
         mint_sem_post(synchronizer->m_endSema);
     }
     mint_sem_post(synchronizer->m_endSema);
@@ -55,6 +57,7 @@ ThreadSynchronizer::ThreadSynchronizer(int numThreads)
         ThreadInfo* info = m_threadInfos + i;
         info->parent = this;
         info->beginSema = mint_sem_create();
+        info->runningTime = 0;
         mint_thread_create(&info->thread, threadStart, info);
     }
 }

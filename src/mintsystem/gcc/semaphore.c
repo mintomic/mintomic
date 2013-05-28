@@ -1,4 +1,4 @@
-#include <mintthreads/semaphore.h>
+#include <mintsystem/semaphore.h>
 #include <errno.h>
 
 #if MINT_IS_APPLE

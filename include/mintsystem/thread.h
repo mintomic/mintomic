@@ -1,5 +1,5 @@
-#ifndef __MINTTHREADS_THREAD_H__
-#define __MINTTHREADS_THREAD_H__
+#ifndef __MINTSYSTEM_THREAD_H__
+#define __MINTSYSTEM_THREAD_H__
 
 #include <mintomic/core.h>
 
@@ -11,4 +11,4 @@
     #error Unsupported platform!
 #endif
 
-#endif // __MINTTHREADS_THREAD_H__
+#endif // __MINTSYSTEM_THREAD_H__

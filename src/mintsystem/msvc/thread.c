@@ -1,5 +1,5 @@
 #include <mintomic/mintomic.h>
-#include <mintthreads/thread.h>
+#include <mintsystem/thread.h>
 #include <assert.h>
 #include <malloc.h>
 
@@ -25,13 +25,12 @@ int mint_thread_create(mint_thread_t *thread, void *(*start_routine) (void *), v
     uint32_t hwThread;
 #endif
     mint_thread_t t = (mint_thread_t) malloc(sizeof(struct mint_thread_msvc_t));
-    assert(attr == NULL); // Not supported
     t->start_routine = start_routine;
     t->arg_or_retval = arg;
     t->hThread = CreateThread(NULL, 0, mint_thread_entry_point, t, 0, NULL);
 #if _XBOX_VER >= 200    // Xbox 360
     // A quick, hacky way to get threads running on separate cores on Xbox 360,
-    // postponing the need to implement a portable thread affinity module in MintThreads.
+    // postponing the need to implement a portable thread affinity module in MintSystem.
     // As threads are created, we simply assign them to HW threads in a cycle: 0, 2, 4, 1, 3, 5, in that order.
     // This helps the Mintomic sample programs demonstrate useful things without any extra thread creation code.
     hwThread = ((uint32_t) mint_fetch_add_32_relaxed(&sharedHwThreadCounter, 1) * 2) % 12;

@@ -1,5 +1,5 @@
-#ifndef __MINTTHREADS_PRIVATE_SEMAPHORE_GCC_H__
-#define __MINTTHREADS_PRIVATE_SEMAPHORE_GCC_H__
+#ifndef __MINTSYSTEM_PRIVATE_SEMAPHORE_GCC_H__
+#define __MINTSYSTEM_PRIVATE_SEMAPHORE_GCC_H__
 
 #include <semaphore.h>
 
@@ -26,4 +26,4 @@ MINT_C_INLINE int mint_sem_post(mint_sem_t *sem)
 } // extern "C"
 #endif
 
-#endif // __MINTTHREADS_PRIVATE_SEMAPHORE_GCC_H__
+#endif // __MINTSYSTEM_PRIVATE_SEMAPHORE_GCC_H__

@@ -94,22 +94,14 @@ include(../cmake/BuildSettings.cmake)
 
 # Add subdirectories with dependencies before dependents so that each subdirectory
 # inherits the include paths gathered from the dependencies before it.
-
-# Mintomic
 add_subdirectory(../src/mintomic mintomic)
-include_directories(../include)
-
-# MintThreads
-add_subdirectory(../src/mintthreads mintthreads)
-include_directories(../include)
-
-# MintPack
+add_subdirectory(../src/mintsystem mintsystem)
 add_subdirectory(../src/mintpack mintpack)
 include_directories(../include)
 
 # Add libraries with dependencies after dependents to satisfy ld linker.
 target_link_libraries(${PROJECT_NAME} MintPack)
-target_link_libraries(${PROJECT_NAME} MintThreads)
+target_link_libraries(${PROJECT_NAME} MintSystem)
 get_target_property(TARGET_TYPE Mintomic TYPE)
 if(${TARGET_TYPE} STREQUAL "UTILITY")
     # Nothing to link with in the Mintomic subdirectory

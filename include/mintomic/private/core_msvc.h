@@ -36,34 +36,9 @@ extern "C" {
 
 
 //-------------------------------------
-//  Thread IDs
+//  Thread local
 //-------------------------------------
-typedef uint32_t mint_tid;
-
-MINT_C_INLINE mint_tid mint_get_current_thread_id()
-{
-#if MINT_TARGET_XBOX_360  // Xbox 360
-    return GetCurrentThreadId();
-#elif MINT_CPU_X64        // Windows x64
-    return ((uint32_t*) __readgsqword(48))[18]; // Read directly from the TIB
-#elif MINT_CPU_X86        // Windows x86
-    return ((uint32_t*) __readfsdword(24))[9];  // Read directly from the TIB
-#endif
-}
-
-
-//-------------------------------------
-//  Sleep
-//-------------------------------------
-MINT_C_INLINE void mint_yield_hw_thread()
-{
-    YieldProcessor();
-}
-
-MINT_C_INLINE void mint_sleep_millis(int millis)
-{
-    Sleep(millis);
-}
+#define MINT_THREAD_LOCAL __declspec(thread)
 
 
 #ifdef __cplusplus

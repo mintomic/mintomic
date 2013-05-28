@@ -2,6 +2,7 @@
 #define __MINTPACK_LWLOGGER_H__
 
 #include <mintomic/mintomic.h>
+#include <mintsystem/tid.h>
 
 
 //-------------------------------------
@@ -15,7 +16,7 @@ namespace LWLogger
 {
     struct Event
     {
-        mint_tid tid;     // Thread ID
+        mint_tid_t tid;     // Thread ID
         const char* msg;  // Message string
         uint32_t param;   // A parameter which can mean anything you want
     };
