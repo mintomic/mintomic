@@ -13,11 +13,11 @@ extern "C" {
 //-------------------------------------
 //  Thread IDs
 //-------------------------------------
-typedef pthread_t mint_tid_t;
+typedef size_t mint_tid_t;
 
 MINT_C_INLINE mint_tid_t mint_get_current_thread_id()
 {
-    return pthread_self();
+    return (mint_tid_t) pthread_self();
 }
 
 
