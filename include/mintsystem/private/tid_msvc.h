@@ -31,7 +31,7 @@ typedef uint32_t mint_pid_t;
 MINT_C_INLINE mint_pid_t mint_get_current_process_id()
 {
 #if MINT_TARGET_XBOX_360  // Xbox 360
-    return GetCurrentThreadId();
+    return 0;
 #elif MINT_CPU_X64        // Windows x64
     return ((uint32_t*) __readgsqword(48))[16]; // Read directly from the TIB
 #elif MINT_CPU_X86        // Windows x86
