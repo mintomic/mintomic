@@ -68,10 +68,10 @@ bool ${TEST_FUNC}(int numThreads)
         g_indices[i] = i;
 
     // Shuffle the index array
-    PseudoRandomNumberGenerator prng(kDataBitSize);
+    Random random;
     for (int i = 0; i < kDataBitSize; i++)
     {
-        int swap = prng.generateInt32() % (kDataBitSize - i);
+        int swap = random.generate32() % (kDataBitSize - i);
         int temp = g_indices[i];
         g_indices[i] = g_indices[swap];
         g_indices[swap] = temp;

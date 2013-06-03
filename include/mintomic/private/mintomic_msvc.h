@@ -85,7 +85,7 @@ MINT_C_INLINE uint32_t mint_fetch_or_32_relaxed(mint_atomic32_t *object, uint32_
 //----------------------------------------------
 MINT_C_INLINE uint64_t mint_load_64_relaxed(mint_atomic64_t *object)
 {
-#if MINT_CPU_X64
+#if MINT_CPU_X64 || MINT_TARGET_XBOX_360
     return object->_nonatomic;
 #else
     // On 32-bit x86, the most compatible way to get an atomic 64-bit load is with cmpxchg8b.
@@ -106,7 +106,7 @@ MINT_C_INLINE uint64_t mint_load_64_relaxed(mint_atomic64_t *object)
 
 MINT_C_INLINE void mint_store_64_relaxed(mint_atomic64_t *object, uint64_t value)
 {
-#if MINT_CPU_X64
+#if MINT_CPU_X64 || MINT_TARGET_XBOX_360
     object->_nonatomic = value;
 #else
     // On 32-bit x86, the most compatible way to get an atomic 64-bit store is with cmpxchg8b.
@@ -133,7 +133,7 @@ MINT_C_INLINE uint64_t mint_compare_exchange_strong_64_relaxed(mint_atomic64_t *
 
 MINT_C_INLINE uint64_t mint_fetch_add_64_relaxed(mint_atomic64_t *object, int64_t operand)
 {
-#if MINT_CPU_X64
+#if MINT_CPU_X64 || MINT_TARGET_XBOX_360
     return _InterlockedExchangeAdd64((LONGLONG *) object, operand);
 #else
     // It would be cool to check the zero flag, which is set by lock cmpxchg8b, to know whether the CAS succeeded,
@@ -152,7 +152,7 @@ MINT_C_INLINE uint64_t mint_fetch_add_64_relaxed(mint_atomic64_t *object, int64_
 
 MINT_C_INLINE uint64_t mint_fetch_and_64_relaxed(mint_atomic64_t *object, uint64_t operand)
 {
-#if MINT_CPU_X64
+#if MINT_CPU_X64 || MINT_TARGET_XBOX_360
     return _InterlockedAnd64((LONGLONG *) object, operand);
 #else
     uint64_t expected = object->_nonatomic;
@@ -168,7 +168,7 @@ MINT_C_INLINE uint64_t mint_fetch_and_64_relaxed(mint_atomic64_t *object, uint64
 
 MINT_C_INLINE uint64_t mint_fetch_or_64_relaxed(mint_atomic64_t *object, uint64_t operand)
 {
-#if MINT_CPU_X64
+#if MINT_CPU_X64 || MINT_TARGET_XBOX_360
     return _InterlockedOr64((LONGLONG *) object, operand);
 #else
     uint64_t expected = object->_nonatomic;

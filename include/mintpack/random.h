@@ -19,8 +19,12 @@ private:
 
 public:
     Random();
-    uint32_t generate();
-    uint32_t generateUnique();
+    uint32_t generate32();
+    uint32_t generateUnique32();
+    uint64_t generate64()
+    {
+        return (((uint64_t) generate32()) << 32) | generate32();
+    }
 };
 
 

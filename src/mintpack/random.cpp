@@ -80,7 +80,7 @@ Random::Random()
 }
 
 //-------------------------------------------------------------------------
-uint32_t Random::generate()
+uint32_t Random::generate32()
 {
     uint32_t x = m_value;
     uint32_t carry = 1; // Used to alter the internal state.
@@ -97,7 +97,7 @@ uint32_t Random::generate()
 }
 
 //-------------------------------------------------------------------------
-uint32_t Random::generateUnique()
+uint32_t Random::generateUnique32()
 {
     uint32_t x = m_value;
     m_value++;

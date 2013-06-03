@@ -8,7 +8,7 @@
 
 #cmakedefine01 TEST_FORCE_FAIL
 
-static PseudoRandomNumberGenerator g_prng[2];
+static Random g_random[2];
 static int X, Y;
 static int r1, r2;
 
@@ -16,7 +16,7 @@ static void threadFunc(int threadNum)
 {
     if (threadNum == 0)
     {
-        while (g_prng[0].generateInt32() % 8 != 0) {}  // Random delay
+        while (g_random[0].generate32() % 8 != 0) {}  // Random delay
         X = 1;
 #if TEST_FORCE_FAIL
         mint_signal_fence_seq_cst();  // Prevent compiler reordering only
@@ -27,7 +27,7 @@ static void threadFunc(int threadNum)
     }
     else
     {
-        while (g_prng[1].generateInt32() % 8 != 0) {}  // Random delay
+        while (g_random[1].generate32() % 8 != 0) {}  // Random delay
         Y = 1;
 #if TEST_FORCE_FAIL
         mint_signal_fence_seq_cst();  // Prevent compiler reordering only
