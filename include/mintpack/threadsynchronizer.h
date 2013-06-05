@@ -28,13 +28,17 @@ private:
     static void* threadStart(void* param);
     bool m_mustExit;
     void (*m_threadFunc)(int);
+    void (*m_threadParamFunc)(int, void*);
+    void* m_param;
     void kickThreads();
 
 public:
     ThreadSynchronizer(int numThreads);
     ~ThreadSynchronizer();
     void run(void (*func)(int));
+    void run(void (*func)(int, void*), void* param);
     mint_timer_tick_t getThreadRunningTime(int num) const { return m_threadInfos[num].runningTime; }
+    mint_timer_tick_t getAverageThreadRunningTime() const;
 };
 
 

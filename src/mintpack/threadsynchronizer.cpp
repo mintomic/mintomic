@@ -35,7 +35,10 @@ void* ThreadSynchronizer::threadStart(void* param)
         }
 
         start = mint_timer_get();
-        synchronizer->m_threadFunc(threadNum);
+        if (synchronizer->m_threadFunc)
+            synchronizer->m_threadFunc(threadNum);
+        else if (synchronizer->m_threadParamFunc)
+            synchronizer->m_threadParamFunc(threadNum, synchronizer->m_param);
         mint_timer_tick_t end = mint_timer_get();
         info->runningTime = end - start;
 
@@ -60,6 +63,8 @@ ThreadSynchronizer::ThreadSynchronizer(int numThreads)
         info->runningTime = 0;
         mint_thread_create(&info->thread, threadStart, info);
     }
+    m_threadFunc = NULL;
+    m_threadParamFunc = NULL;
 }
 
 ThreadSynchronizer::~ThreadSynchronizer()
@@ -89,4 +94,22 @@ void ThreadSynchronizer::run(void (*func)(int threadNum))
     m_threadFunc = func;
     m_syncRemaining._nonatomic = m_numThreads;
     kickThreads();
+    m_threadFunc = NULL;
+}
+
+void ThreadSynchronizer::run(void (*func)(int threadNum, void*), void* param)
+{
+    m_threadParamFunc = func;
+    m_param = param;
+    m_syncRemaining._nonatomic = m_numThreads;
+    kickThreads();
+    m_threadParamFunc = NULL;
+}
+
+mint_timer_tick_t ThreadSynchronizer::getAverageThreadRunningTime() const
+{
+    mint_timer_tick_t total = 0;
+    for (int t = 0; t < m_numThreads; t++)
+        total += getThreadRunningTime(t);
+    return total / m_numThreads;
 }
