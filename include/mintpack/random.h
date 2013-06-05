@@ -6,8 +6,8 @@
 
 //-------------------------------------
 //  PRNG that seeds itself using various information from the environment.
-//  generate() is uniformly distributed across all 32-bit integer values.
-//  generateUnique() returns unique integers 2^32 times in a row, then repeats the sequence.
+//  generate32() is uniformly distributed across all 32-bit integer values.
+//  generateUnique32() returns unique integers 2^32 times in a row, then repeats the sequence.
 //-------------------------------------
 class Random
 {
