@@ -11,7 +11,7 @@ mint_atomic32_t Random::m_sharedCounter = { 0 };
 static uint32_t getNoiseFromTimer()
 {
     // How many ticks are in 10 microseconds?
-    mint_timer_tick_t interval = (mint_timer_tick_t) (0.00001 * mint_timer_secondsToTicks);
+    mint_timer_tick_t interval = (mint_timer_tick_t) (0.00001 * mint_timer_getSecondsToTicks());
     if (interval == 0)
         interval = 1;
 
@@ -51,7 +51,6 @@ static inline uint32_t permuteWithOffset(uint32_t x, uint32_t offset)
 //-------------------------------------------------------------------------
 Random::Random()
 {
-    assert(mint_timer_is_initialized());
     m_value = 0;
 
     // Try to initialize a set of values that are unique each time Random::Random() is called:

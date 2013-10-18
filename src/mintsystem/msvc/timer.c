@@ -4,10 +4,15 @@
 double mint_timer_ticksToSeconds = 0;
 double mint_timer_secondsToTicks = 0;
 
-void mint_timer_initialize()
+double mint_timer_getSecondsToTicks()
 {
     LARGE_INTEGER freq;
     QueryPerformanceFrequency(&freq);
-    mint_timer_ticksToSeconds = 1.0 / freq.QuadPart;
-    mint_timer_secondsToTicks = (double) freq.QuadPart;
+    return (double) freq.QuadPart;
+}
+
+void mint_timer_initialize()
+{
+    mint_timer_secondsToTicks = mint_timer_getSecondsToTicks();
+    mint_timer_ticksToSeconds = 1.0 / mint_timer_secondsToTicks;
 }

@@ -11,10 +11,12 @@ extern "C" {
 //-------------------------------------
 typedef uint64_t mint_timer_tick_t;
 
+// These are initialized by mint_timer_initialize:
 extern double mint_timer_ticksToSeconds;
 extern double mint_timer_secondsToTicks;
 
 void mint_timer_initialize();
+double mint_timer_getSecondsToTicks();    // Can be called before mint_timer_initialize
 
 MINT_C_INLINE int mint_timer_is_initialized()
 {
