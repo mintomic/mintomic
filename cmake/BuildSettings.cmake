@@ -1,3 +1,14 @@
+if(CMAKE_SYSTEM_NAME MATCHES "AIX")
+  foreach(step CREATE APPEND FINISH)
+    string(REPLACE "<CMAKE_AR>" "<CMAKE_AR> -X64"
+      CMAKE_CXX_ARCHIVE_${step} "${CMAKE_CXX_ARCHIVE_${step}}")
+    string(REPLACE "<CMAKE_AR>" "<CMAKE_AR> -X64"
+      CMAKE_C_ARCHIVE_${step} "${CMAKE_C_ARCHIVE_${step}}")
+  endforeach()
+  set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -maix64")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -maix64")
+endif()
+
 if(${MSVC})
     # Enable debug info in Release.
     set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /Zi")
@@ -12,6 +23,7 @@ elseif(${UNIX})
     set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Os")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Os")
 endif()
+
 
 if(${IOS})
     set(CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos;-iphonesimulator")

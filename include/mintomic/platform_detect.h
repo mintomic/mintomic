@@ -71,6 +71,9 @@
             // Thumb instruction set mode
             #define MINT_CPU_ARM_THUMB 1
         #endif
+	#elif (defined(__powerpc__) || defined (_ARCH_PPC)) && defined (__64BIT__)
+		#define MINT_CPU_POWERPC64 1
+		#define MINT_PTR_SIZE 8
 
     #else
         #error Unrecognized target CPU!
