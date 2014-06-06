@@ -19,6 +19,8 @@ extern "C" {
     #include "private/mintomic_gcc_arm.h"
 #elif MINT_COMPILER_GCC && MINT_CPU_POWERPC64
     #include "private/mintomic_gcc_powerpc.h"
+#elif MINT_COMPILER_GCC && MINT_CPU_SPARC64
+    #include "private/mintomic_gcc_sparc.h"
 #else
     #error Unsupported platform!
 #endif

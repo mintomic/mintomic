@@ -72,7 +72,12 @@
             #define MINT_CPU_ARM_THUMB 1
         #endif
 	#elif (defined(__powerpc__) || defined (_ARCH_PPC)) && defined (__64BIT__)
+        // Only supporting 64bit at the moment, so making the define include 64 for clarity
 		#define MINT_CPU_POWERPC64 1
+		#define MINT_PTR_SIZE 8
+    #elif (defined(__sparc__) && defined (__arch64__))
+        // Only supporting 64bit at the moment, so making the define include 64 for clarity
+		#define MINT_CPU_SPARC64 1
 		#define MINT_PTR_SIZE 8
 
     #else
