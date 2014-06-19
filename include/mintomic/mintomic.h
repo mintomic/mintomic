@@ -21,6 +21,8 @@ extern "C" {
     #include "private/mintomic_gcc_powerpc.h"
 #elif MINT_COMPILER_GCC && MINT_CPU_SPARC64
     #include "private/mintomic_gcc_sparc.h"
+#elif MINT_COMPILER_GCC && (MINT_CPU_S390 || MINT_CPU_S390X)
+    #include "private/mintomic_gcc_s390.h"
 #else
     #error Unsupported platform!
 #endif

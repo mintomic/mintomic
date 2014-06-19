@@ -79,6 +79,14 @@
         // Only supporting 64bit at the moment, so making the define include 64 for clarity
 		#define MINT_CPU_SPARC64 1
 		#define MINT_PTR_SIZE 8
+    #elif (defined(__s390__))
+		#if (defined(__s390x__))
+			#define MINT_CPU_S390X 1
+			#define MINT_PTR_SIZE 8
+		#else
+			#define MINT_CPU_S390 1
+			#define MINT_PTR_SIZE 4
+		#endif
 
     #else
         #error Unrecognized target CPU!
