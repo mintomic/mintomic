@@ -7,6 +7,8 @@
     #include "private/tid_msvc.h"
 #elif MINT_COMPILER_GCC
     #include "private/tid_gcc.h"
+#elif MINT_COMPILER_XLC
+    #include "private/tid_xlc.h"
 #else
     #error Unsupported platform!
 #endif

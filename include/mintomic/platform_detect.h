@@ -91,7 +91,21 @@
     #else
         #error Unrecognized target CPU!
     #endif
-
+#elif defined (__IBMC__) || defined (__IBMCPP__)
+    #define MINT_COMPILER_XLC 1
+    #define MINT_HAS_STDINT 1
+    #if defined(__370__)
+        #if defined(__64BIT_)
+             #error 64 bit S390 not implemented yet on zOS
+             #define MINT_CPU_S390X 1
+             #define MINT_PTR_SIZE 8
+        #else
+             #define MINT_CPU_S390 1
+             #define MINT_PTR_SIZE 4
+        #endif
+    #else
+        #error Unrecognised target CPU!
+    #endif
 #else
     #error Unrecognized compiler!
 #endif

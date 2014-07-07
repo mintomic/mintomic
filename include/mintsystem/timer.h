@@ -7,6 +7,8 @@
     #include "private/timer_msvc.h"
 #elif MINT_COMPILER_GCC
     #include "private/timer_gcc.h"
+#elif MINT_COMPILER_XLC
+    #include "private/timer_xlc.h"
 #else
     #error Unsupported platform!
 #endif
