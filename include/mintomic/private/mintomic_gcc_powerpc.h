@@ -96,7 +96,7 @@ MINT_C_INLINE uint32_t mint_fetch_add_32_relaxed(mint_atomic32_t *object, int32_
 				 "add    %1, %2, %0\n"
 				 "stwcx. %1, 0, %3\n"
 				 "bne-  again%="
-                 : "=&r"(original), "+r"(temp)
+                 : "=&r"(original), "=&r"(temp)
                  : "r"(operand), "r"(&object->_nonatomic)
 		         : "cc", "memory");
     return original;
@@ -176,7 +176,7 @@ MINT_C_INLINE uint32_t mint_fetch_or_32_relaxed(mint_atomic32_t *object, uint32_
 					 "add    %1, %2, %0\n"
 					 "stdcx. %1, 0, %3\n"
 					 "bne-  again%="
-                 : "=&r"(original), "+r"(temp)
+                 : "=&r"(original), "=&r"(temp)
                  : "r"(operand), "r"(&object->_nonatomic)
 		         : "cc", "memory");
 	return original;
