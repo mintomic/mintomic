@@ -10,13 +10,13 @@ extern "C" {
 //  Atomic types
 //-------------------------------------
 #if MINT_HAS_C11_MEMORY_MODEL
-    typedef struct { uint32_t _nonatomic; } __attribute__((aligned(4))) mint_atomic32_t;
+    typedef struct { uint32_t _nonatomic; } __attribute__((aligned(8))) mint_atomic32_t;
     typedef struct { uint64_t _nonatomic; } __attribute__((aligned(8))) mint_atomic64_t;
     typedef struct { void *_nonatomic; } __attribute__((aligned(MINT_PTR_SIZE))) mint_atomicPtr_t;
 #else
     // Without a C/C++11 memory model, we need to declare shared values volatile to
     // prevent out-of-thin-air stores
-    typedef struct { volatile uint32_t _nonatomic; } __attribute__((aligned(4))) mint_atomic32_t;
+    typedef struct { volatile uint32_t _nonatomic; } __attribute__((aligned(8))) mint_atomic32_t;
     typedef struct { volatile uint64_t _nonatomic; } __attribute__((aligned(8))) mint_atomic64_t;
     typedef struct { void *volatile _nonatomic; } __attribute__((aligned(MINT_PTR_SIZE))) mint_atomicPtr_t;
 #endif
@@ -68,7 +68,7 @@ MINT_C_INLINE uint32_t mint_fetch_add_32_relaxed(mint_atomic32_t *object, int32_
 				 "cmp %0, %1\n"
 				 "bne,a,pn  %%icc, again%=\n"
 				 "add %2, %1, %1\n"
-				 : "=&r" (original), "=r" (result)
+				 : "=&r" (original), "=&r" (result)
                  : "r" (operand), "r" (&object->_nonatomic)
 				 : "cc", "memory");
     return result;
@@ -85,7 +85,7 @@ MINT_C_INLINE uint32_t mint_fetch_and_32_relaxed(mint_atomic32_t *object, uint32
 				 "cmp %0, %1\n"
 				 "bne,a,pn  %%icc, again%=\n"
 				 "and %2, %1, %1\n"
-				 : "=&r" (original), "=r" (result)
+				 : "=&r" (original), "=&r" (result)
                  : "r" (operand), "r" (&object->_nonatomic)
 				 : "cc", "memory");
     return result;
@@ -102,7 +102,7 @@ MINT_C_INLINE uint32_t mint_fetch_or_32_relaxed(mint_atomic32_t *object, uint32_
 				 "cmp %0, %1\n"
 				 "bne,a,pn  %%icc, again%=\n"
 				 "or  %2, %1, %1\n"
-				 : "=&r" (original), "=r" (result)
+				 : "=&r" (original), "=&r" (result)
                  : "r" (operand), "r" (&object->_nonatomic)
 				 : "cc", "memory");
 	return result;
@@ -147,7 +147,7 @@ MINT_C_INLINE uint32_t mint_fetch_or_32_relaxed(mint_atomic32_t *object, uint32_
 					 "cmp %0, %1\n"
 					 "bne,a,pn  %%xcc, again%=\n"
 					 "add %2, %1, %1\n"
-					 : "=&r" (original), "=r" (result)
+					 : "=&r" (original), "=&r" (result)
 					 : "r" (operand), "r" (&object->_nonatomic)
 					 : "cc", "memory");
 		return result;
@@ -164,7 +164,7 @@ MINT_C_INLINE uint32_t mint_fetch_or_32_relaxed(mint_atomic32_t *object, uint32_
 					 "cmp %0, %1\n"
 					 "bne,a,pn  %%xcc, again%=\n"
 					 "and %2, %1, %1\n"
-					 : "=&r" (original), "=r" (result)
+					 : "=&r" (original), "=&r" (result)
 					 : "r" (operand), "r" (&object->_nonatomic)
 					 : "cc", "memory");
 		return result;
@@ -181,7 +181,7 @@ MINT_C_INLINE uint32_t mint_fetch_or_32_relaxed(mint_atomic32_t *object, uint32_
 					 "cmp %0, %1\n"
 					 "bne,a,pn  %%xcc, again%=\n"
 					 "or  %2, %1, %1\n"
-					 : "=&r" (original), "=r" (result)
+					 : "=&r" (original), "=&r" (result)
 					 : "r" (operand), "r" (&object->_nonatomic)
 					 : "cc", "memory");
         return result;
