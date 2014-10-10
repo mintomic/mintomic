@@ -61,51 +61,51 @@ MINT_C_INLINE uint32_t mint_fetch_add_32_relaxed(mint_atomic32_t *object, int32_
 {
     register uint32_t original;
 	register uint32_t result;
-    asm volatile("again%=:\n"
-				 "lduw [%3], %0\n"
+    asm volatile("lduw [%3], %0\n"
+				 "again%=:\n"
 				 "add %2, %0, %1\n"
 				 "cas [%3], %0, %1\n"
 				 "cmp %0, %1\n"
 				 "bne,a,pn  %%icc, again%=\n"
-				 "add %2, %1, %1\n"
+				 "add %1, 0, %0\n"
 				 : "=&r" (original), "=&r" (result)
                  : "r" (operand), "r" (&object->_nonatomic)
 				 : "cc", "memory");
-    return result;
+    return original;
 }
 
 MINT_C_INLINE uint32_t mint_fetch_and_32_relaxed(mint_atomic32_t *object, uint32_t operand)
 {
     register uint32_t original;
 	register uint32_t result;
-    asm volatile("again%=:\n"
-				 "lduw [%3], %0\n"
+    asm volatile("lduw [%3], %0\n"
+				 "again%=:\n"
 				 "and %2, %0, %1\n"
 				 "cas [%3], %0, %1\n"
 				 "cmp %0, %1\n"
 				 "bne,a,pn  %%icc, again%=\n"
-				 "and %2, %1, %1\n"
+				 "add %1, 0, %0\n"
 				 : "=&r" (original), "=&r" (result)
                  : "r" (operand), "r" (&object->_nonatomic)
 				 : "cc", "memory");
-    return result;
+    return original;
 }
 
 MINT_C_INLINE uint32_t mint_fetch_or_32_relaxed(mint_atomic32_t *object, uint32_t operand)
 {
     register uint32_t original;
 	register uint32_t result;
-    asm volatile("again%=:\n"
-				 "lduw [%3], %0\n"
+    asm volatile("lduw [%3], %0\n"
+				 "again%=:\n"
 				 "or %2, %0, %1\n"
 				 "cas [%3], %0, %1\n"
 				 "cmp %0, %1\n"
 				 "bne,a,pn  %%icc, again%=\n"
-				 "or  %2, %1, %1\n"
+				 "add %1, 0, %0\n"
 				 : "=&r" (original), "=&r" (result)
                  : "r" (operand), "r" (&object->_nonatomic)
 				 : "cc", "memory");
-	return result;
+	return original;
 }
 
 
@@ -140,51 +140,51 @@ MINT_C_INLINE uint32_t mint_fetch_or_32_relaxed(mint_atomic32_t *object, uint32_
     {
 		register uint64_t original;
 		register uint64_t result;
-		asm volatile("again%=:\n"
-					 "ldx [%3], %0\n"
+		asm volatile("ldx [%3], %0\n"
+					 "again%=:\n"
 					 "add %2, %0, %1\n"
 					 "casx [%3], %0, %1\n"
 					 "cmp %0, %1\n"
 					 "bne,a,pn  %%xcc, again%=\n"
-					 "add %2, %1, %1\n"
+					 "add %1, 0, %0\n"
 					 : "=&r" (original), "=&r" (result)
 					 : "r" (operand), "r" (&object->_nonatomic)
 					 : "cc", "memory");
-		return result;
+		return original;
     }
 
     MINT_C_INLINE uint64_t mint_fetch_and_64_relaxed(mint_atomic64_t *object, uint64_t operand)
     {
 		register uint64_t original;
 		register uint64_t result;
-		asm volatile("again%=:\n"
-					 "ldx [%3], %0\n"
+		asm volatile("ldx [%3], %0\n"
+					 "again%=:\n"
 					 "and %2, %0, %1\n"
 					 "casx [%3], %0, %1\n"
 					 "cmp %0, %1\n"
 					 "bne,a,pn  %%xcc, again%=\n"
-					 "and %2, %1, %1\n"
+					 "add %1, 0, %0\n"
 					 : "=&r" (original), "=&r" (result)
 					 : "r" (operand), "r" (&object->_nonatomic)
 					 : "cc", "memory");
-		return result;
+		return original;
     }
 
     MINT_C_INLINE uint64_t mint_fetch_or_64_relaxed(mint_atomic64_t *object, uint64_t operand)
     {
 		register uint64_t original;
 		register uint64_t result;
-		asm volatile("again%=:\n"
-					 "ldx [%3], %0\n"
+		asm volatile("ldx [%3], %0\n"
+					 "again%=:\n"
 					 "or %2, %0, %1\n"
 					 "casx [%3], %0, %1\n"
 					 "cmp %0, %1\n"
 					 "bne,a,pn  %%xcc, again%=\n"
-					 "or  %2, %1, %1\n"
+					 "add  %1, 0, %0\n"
 					 : "=&r" (original), "=&r" (result)
 					 : "r" (operand), "r" (&object->_nonatomic)
 					 : "cc", "memory");
-        return result;
+        return original;
     }
 
 #else
