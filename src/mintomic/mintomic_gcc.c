@@ -11,6 +11,7 @@
 //----------------------------------------------------------------------------
 
 __asm__(
+"   .text\n"
 "   .align 2\n"
 "   .globl _mint_thread_fence_acquire\n"
 "   .globl _mint_thread_fence_release\n"
@@ -25,6 +26,7 @@ __asm__(
 );
 
 __asm__(
+"   .text\n"
 "   .align  2\n"
 "   .globl  _mint_compare_exchange_strong_32_relaxed\n"
 "_mint_compare_exchange_strong_32_relaxed:\n"
@@ -43,6 +45,7 @@ __asm__(
 );
 
 __asm__(
+"   .text\n"
 "   .align  2\n"
 "   .globl  _mint_fetch_add_32_relaxed\n"
 "_mint_fetch_add_32_relaxed:\n"
@@ -59,6 +62,7 @@ __asm__(
 );
 
 __asm__(
+"   .text\n"
 "   .align  2\n"
 "   .globl  _mint_fetch_and_32_relaxed\n"
 "_mint_fetch_and_32_relaxed:\n"
@@ -75,6 +79,7 @@ __asm__(
 );
 
 __asm__(
+"   .text\n"
 "   .align  2\n"
 "   .globl  _mint_fetch_or_32_relaxed\n"
 "_mint_fetch_or_32_relaxed:\n"
@@ -130,6 +135,7 @@ __asm__(
 //----------------------------------------------------------------------------
 
 __asm__(
+"   .text\n"
 "   .align  2\n"
 "   .globl  _mint_load_64_relaxed\n"
 #if MINT_CPU_ARM_THUMB && (MINT_CPU_ARM_VERSION != 6)
@@ -147,6 +153,7 @@ __asm__(
 );
 
 __asm__(
+"   .text\n"
 "   .align  2\n"
 "   .globl  _mint_store_64_relaxed\n"
 #if MINT_CPU_ARM_THUMB && (MINT_CPU_ARM_VERSION != 6)
@@ -168,6 +175,7 @@ __asm__(
 );
 
 __asm__(
+"   .text\n"
 "   .align  2\n"
 "   .globl  _mint_compare_exchange_strong_64_relaxed\n"
 #if MINT_CPU_ARM_THUMB && (MINT_CPU_ARM_VERSION != 6)
@@ -197,6 +205,7 @@ __asm__(
 );
 
 __asm__(
+"   .text\n"
 "   .align  2\n"
 "   .globl  _mint_fetch_add_64_relaxed\n"
 #if MINT_CPU_ARM_THUMB && (MINT_CPU_ARM_VERSION != 6)
@@ -219,6 +228,7 @@ __asm__(
 );
 
 __asm__(
+"   .text\n"
 "   .align  2\n"
 "   .globl  _mint_fetch_and_64_relaxed\n"
 #if MINT_CPU_ARM_THUMB && (MINT_CPU_ARM_VERSION != 6)
@@ -241,6 +251,7 @@ __asm__(
 );
 
 __asm__(
+"   .text\n"
 "   .align  2\n"
 "   .globl  _mint_fetch_or_64_relaxed\n"
 #if MINT_CPU_ARM_THUMB && (MINT_CPU_ARM_VERSION != 6)
