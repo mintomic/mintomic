@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8.5)
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE INTERNAL "" FORCE)
 project(MintomicTests)
+option(MINT_HAS_EXCHANGE "Include tests for atomic exchange" OFF)
 
 
 #------------------------------------------
@@ -61,6 +62,9 @@ endfunction()
 
 set(TEST_ENTRY_FUNCS "")
 set(TEST_INFOS "")
+if (MINT_HAS_EXCHANGE)
+    AddMintomicTests(exchange       VAR_THREAD VAR_SIZE ALLOW_FAIL)
+endif()
 AddMintomicTests(load_store     DUAL_THREAD ALLOW_FAIL VAR_SIZE)
 AddMintomicTests(return_values  VAR_SIZE)
 AddMintomicTests(increment      VAR_THREAD VAR_SIZE)
