@@ -273,4 +273,7 @@ __asm__(
 "   bx      lr\n"
 );
 
+
+#else
+void* Sun_ld_wants_me=0;
 #endif  // 64-bit atomics

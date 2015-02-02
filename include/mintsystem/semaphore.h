@@ -7,6 +7,8 @@
     #include "private/semaphore_msvc.h"
 #elif MINT_COMPILER_GCC
     #include "private/semaphore_gcc.h"
+#elif MINT_COMPILER_XLC
+    #include "private/semaphore_xlc.h"
 #else
     #error Unsupported platform!
 #endif

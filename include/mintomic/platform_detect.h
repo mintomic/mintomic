@@ -71,11 +71,41 @@
             // Thumb instruction set mode
             #define MINT_CPU_ARM_THUMB 1
         #endif
+	#elif (defined(__powerpc__) || defined (_ARCH_PPC)) && defined (__64BIT__)
+        // Only supporting 64bit at the moment, so making the define include 64 for clarity
+		#define MINT_CPU_POWERPC64 1
+		#define MINT_PTR_SIZE 8
+    #elif (defined(__sparc__) && defined (__arch64__))
+        // Only supporting 64bit at the moment, so making the define include 64 for clarity
+		#define MINT_CPU_SPARC64 1
+		#define MINT_PTR_SIZE 8
+    #elif (defined(__s390__))
+		#if (defined(__s390x__))
+			#define MINT_CPU_S390X 1
+			#define MINT_PTR_SIZE 8
+		#else
+			#define MINT_CPU_S390 1
+			#define MINT_PTR_SIZE 4
+		#endif
 
     #else
         #error Unrecognized target CPU!
     #endif
-
+#elif defined (__IBMC__) || defined (__IBMCPP__)
+    #define MINT_COMPILER_XLC 1
+    #define MINT_HAS_STDINT 1
+    #if defined(__370__)
+        #if defined(__64BIT_)
+             #error 64 bit S390 not implemented yet on zOS
+             #define MINT_CPU_S390X 1
+             #define MINT_PTR_SIZE 8
+        #else
+             #define MINT_CPU_S390 1
+             #define MINT_PTR_SIZE 4
+        #endif
+    #else
+        #error Unrecognised target CPU!
+    #endif
 #else
     #error Unrecognized compiler!
 #endif

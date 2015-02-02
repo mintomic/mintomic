@@ -59,7 +59,8 @@ Random::Random()
     uint64_t time = mint_get_current_utc_time();
     m_offsets[2] = (uint32_t) (time >> 32);
     m_offsets[3] = (uint32_t) time;
-    m_offsets[4] = (uint32_t) mint_get_current_thread_id();
+    mint_tid_t tid=mint_get_current_thread_id();
+    m_offsets[4] = (uint32_t) *((uint32_t*)&tid);
     m_offsets[5] = (uint32_t) mint_get_current_process_id();
     m_offsets[6] = getNoiseFromTimer();
     uint64_t tick = (uint64_t) mint_timer_get();

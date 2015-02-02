@@ -5,7 +5,7 @@
 
 #if MINT_COMPILER_MSVC
     #include "private/mutex_msvc.h"
-#elif MINT_COMPILER_GCC
+#elif MINT_COMPILER_GCC || MINT_COMPILER_XLC
     #include "private/mutex_gcc.h"
 #else
     #error Unsupported platform!

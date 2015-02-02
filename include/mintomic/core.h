@@ -14,6 +14,8 @@
     #include "private/core_msvc.h"
 #elif MINT_COMPILER_GCC
     #include "private/core_gcc.h"
+#elif MINT_COMPILER_XLC
+    #include "private/core_xlc.h"
 #else
     #error Unsupported platform!
 #endif
