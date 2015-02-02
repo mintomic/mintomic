@@ -59,14 +59,14 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t value
     object->_nonatomic = value;
 }
 
-MINT_C_INLINE uint32_t mint_exchange_32_relaxed(mint_atomic32_t *object, uint32_t desired)
-{
-	return _InterlockedExchange((long *) object, desired);
-}
-
 MINT_C_INLINE uint32_t mint_compare_exchange_strong_32_relaxed(mint_atomic32_t *object, uint32_t expected, uint32_t desired)
 {
     return _InterlockedCompareExchange((long *) object, desired, expected);
+}
+
+MINT_C_INLINE uint32_t mint_exchange_32_relaxed(mint_atomic32_t *object, uint32_t desired)
+{
+    return _InterlockedExchange((long *) object, desired);
 }
 
 MINT_C_INLINE uint32_t mint_fetch_add_32_relaxed(mint_atomic32_t *object, int32_t operand)
@@ -131,14 +131,14 @@ MINT_C_INLINE void mint_store_64_relaxed(mint_atomic64_t *object, uint64_t value
 #endif
 }
 
-MINT_C_INLINE uint64_t mint_exchange_64_relaxed(mint_atomic64_t *object, uint64_t desired)
-{
-	return _InterlockedExchange64((LONGLONG *) object, desired);
-}
-
 MINT_C_INLINE uint64_t mint_compare_exchange_strong_64_relaxed(mint_atomic64_t *object, uint64_t expected, uint64_t desired)
 {
     return _InterlockedCompareExchange64((LONGLONG *) object, desired, expected);
+}
+
+MINT_C_INLINE uint64_t mint_exchange_64_relaxed(mint_atomic64_t *object, uint64_t desired)
+{
+    return _InterlockedExchange64((LONGLONG *) object, desired);
 }
 
 MINT_C_INLINE uint64_t mint_fetch_add_64_relaxed(mint_atomic64_t *object, int64_t operand)
