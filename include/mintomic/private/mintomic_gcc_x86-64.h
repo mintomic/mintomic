@@ -78,6 +78,17 @@ MINT_C_INLINE uint32_t mint_compare_exchange_strong_32_relaxed(mint_atomic32_t *
     return original;
 }
 
+MINT_C_INLINE uint32_t mint_exchange_32_relaxed(mint_atomic32_t *object, uint32_t desired)
+{
+    // No lock prefix is necessary for XCHG.
+    // See mint_fetch_add_32_relaxed for explanation of constraints.
+    uint32_t original;
+    asm volatile("xchgl %0, %1"
+                 : "=r"(original), "+m"(object->_nonatomic)
+                 : "0"(desired));
+    return original;
+}
+
 MINT_C_INLINE uint32_t mint_fetch_add_32_relaxed(mint_atomic32_t *object, int32_t operand)
 {
     // "=r"(original) chooses any general register, makes that %0, and outputs this register to original after the block.
@@ -149,6 +160,15 @@ MINT_C_INLINE uint32_t mint_fetch_or_32_relaxed(mint_atomic32_t *object, uint32_
         asm volatile("lock; cmpxchgq %2, %1"
                      : "=a"(original), "+m"(object->_nonatomic)
                      : "q"(desired), "0"(expected));
+        return original;
+    }
+
+    MINT_C_INLINE uint64_t mint_exchange_64_relaxed(mint_atomic64_t *object, uint64_t desired)
+    {
+        uint64_t original;
+        asm volatile("xchgq %0, %1"
+                     : "=r"(original), "+m"(object->_nonatomic)
+                     : "0"(desired));
         return original;
     }
 
@@ -241,6 +261,18 @@ MINT_C_INLINE uint32_t mint_fetch_or_32_relaxed(mint_atomic32_t *object, uint32_
                      : "=A"(original), "+m"(object->_nonatomic)
                      : "b"((uint32_t) desired), "c"((uint32_t) (desired >> 32)), "0"(expected));
         return original;
+    }
+
+    MINT_C_INLINE uint64_t mint_exchange_64_relaxed(mint_atomic64_t *object, uint64_t desired)
+    {
+        uint64_t original = object->_nonatomic;
+        for (;;)
+        {
+            uint64_t previous = mint_compare_exchange_strong_64_relaxed(object, original, desired);
+            if (original == previous)
+                return original;
+            original = previous;
+        }
     }
 
     MINT_C_INLINE uint64_t mint_fetch_add_64_relaxed(mint_atomic64_t *object, int64_t operand)
