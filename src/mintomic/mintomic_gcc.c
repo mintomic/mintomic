@@ -1,5 +1,14 @@
 #include <mintomic/core.h>
 
+// When compiling for ELF format, there are no leading underscores on C symbol names.
+// For other formats, such as a.out (used on iOS), a leading underscore is expected.
+// http://www.nasm.us/doc/nasmdoc9.html
+#if __ELF__
+   #define UND
+#else
+   #define UND "_"
+#endif
+
 #if MINT_COMPILER_GCC && MINT_CPU_ARM && (MINT_CPU_ARM_VERSION == 6) && MINT_CPU_ARM_THUMB  // ARMv6 Thumb mode
 
 //----------------------------------------------------------------------------
@@ -13,12 +22,12 @@
 __asm__(
 "   .text\n"
 "   .align 2\n"
-"   .globl _mint_thread_fence_acquire\n"
-"   .globl _mint_thread_fence_release\n"
-"   .globl _mint_thread_fence_seq_cst\n"
-"_mint_thread_fence_acquire:\n"
-"_mint_thread_fence_release:\n"
-"_mint_thread_fence_seq_cst:\n"
+"   .globl "UND"mint_thread_fence_acquire\n"
+"   .globl "UND"mint_thread_fence_release\n"
+"   .globl "UND"mint_thread_fence_seq_cst\n"
+UND"mint_thread_fence_acquire:\n"
+UND"mint_thread_fence_release:\n"
+UND"mint_thread_fence_seq_cst:\n"
 // Do we really need to set the source register to 0?
 "   mov r0, #0\n"
 "   mcr p15, 0, r0, c7, c10, 5\n"
@@ -28,8 +37,8 @@ __asm__(
 __asm__(
 "   .text\n"
 "   .align  2\n"
-"   .globl  _mint_compare_exchange_strong_32_relaxed\n"
-"_mint_compare_exchange_strong_32_relaxed:\n"
+"   .globl  "UND"mint_compare_exchange_strong_32_relaxed\n"
+UND"mint_compare_exchange_strong_32_relaxed:\n"
 "   push    {r4}\n"
 "   mov     r4, r0\n"
 "1:\n"
@@ -47,8 +56,8 @@ __asm__(
 __asm__(
 "   .text\n"
 "   .align  2\n"
-"   .globl  _mint_fetch_add_32_relaxed\n"
-"_mint_fetch_add_32_relaxed:\n"
+"   .globl  "UND"mint_fetch_add_32_relaxed\n"
+UND"mint_fetch_add_32_relaxed:\n"
 "   push    {r4}\n"
 "   mov     r4, r0\n"
 "1:\n"
@@ -64,8 +73,8 @@ __asm__(
 __asm__(
 "   .text\n"
 "   .align  2\n"
-"   .globl  _mint_fetch_and_32_relaxed\n"
-"_mint_fetch_and_32_relaxed:\n"
+"   .globl  "UND"mint_fetch_and_32_relaxed\n"
+UND"mint_fetch_and_32_relaxed:\n"
 "   push    {r4}\n"
 "   mov     r4, r0\n"
 "1:\n"
@@ -81,8 +90,8 @@ __asm__(
 __asm__(
 "   .text\n"
 "   .align  2\n"
-"   .globl  _mint_fetch_or_32_relaxed\n"
-"_mint_fetch_or_32_relaxed:\n"
+"   .globl  "UND"mint_fetch_or_32_relaxed\n"
+UND"mint_fetch_or_32_relaxed:\n"
 "   push    {r4}\n"
 "   mov     r4, r0\n"
 "1:\n"
@@ -137,12 +146,12 @@ __asm__(
 __asm__(
 "   .text\n"
 "   .align  2\n"
-"   .globl  _mint_load_64_relaxed\n"
+"   .globl  "UND"mint_load_64_relaxed\n"
 #if MINT_CPU_ARM_THUMB && (MINT_CPU_ARM_VERSION != 6)
 "   .thumb\n"
-"   .thumb_func _mint_load_64_relaxed\n"
+"   .thumb_func "UND"mint_load_64_relaxed\n"
 #endif
-"_mint_load_64_relaxed:\n"
+UND"mint_load_64_relaxed:\n"
 "   mov     r2, r0\n"
 "1:\n"
 "   ldrexd  r0, r1, [r2]\n"
@@ -155,12 +164,12 @@ __asm__(
 __asm__(
 "   .text\n"
 "   .align  2\n"
-"   .globl  _mint_store_64_relaxed\n"
+"   .globl  "UND"mint_store_64_relaxed\n"
 #if MINT_CPU_ARM_THUMB && (MINT_CPU_ARM_VERSION != 6)
 "   .thumb\n"
-"   .thumb_func _mint_store_64_relaxed\n"
+"   .thumb_func "UND"mint_store_64_relaxed\n"
 #endif
-"_mint_store_64_relaxed:\n"
+UND"mint_store_64_relaxed:\n"
 "   push    {r4-r5}\n"
 "   mov     r5, r0\n"
 "   mov     r3, r2\n"
@@ -177,12 +186,12 @@ __asm__(
 __asm__(
 "   .text\n"
 "   .align  2\n"
-"   .globl  _mint_compare_exchange_strong_64_relaxed\n"
+"   .globl  "UND"mint_compare_exchange_strong_64_relaxed\n"
 #if MINT_CPU_ARM_THUMB && (MINT_CPU_ARM_VERSION != 6)
 "   .thumb\n"
-"   .thumb_func _mint_compare_exchange_strong_64_relaxed\n"
+"   .thumb_func "UND"mint_compare_exchange_strong_64_relaxed\n"
 #endif
-"_mint_compare_exchange_strong_64_relaxed:\n"
+UND"mint_compare_exchange_strong_64_relaxed:\n"
 "   push    {r4-r7}\n"
 "   mov     r6, r3\n"
 "   ldr     r7, [sp, #16]\n"
@@ -207,12 +216,12 @@ __asm__(
 __asm__(
 "   .text\n"
 "   .align  2\n"
-"   .globl  _mint_fetch_add_64_relaxed\n"
+"   .globl  "UND"mint_fetch_add_64_relaxed\n"
 #if MINT_CPU_ARM_THUMB && (MINT_CPU_ARM_VERSION != 6)
 "   .thumb\n"
-"   .thumb_func _mint_fetch_add_64_relaxed\n"
+"   .thumb_func "UND"mint_fetch_add_64_relaxed\n"
 #endif
-"_mint_fetch_add_64_relaxed:\n"
+UND"mint_fetch_add_64_relaxed:\n"
 "   push    {r4-r7}\n"
 "   mov     r5, r0\n"
 "   mov     r4, r1\n"
@@ -230,12 +239,12 @@ __asm__(
 __asm__(
 "   .text\n"
 "   .align  2\n"
-"   .globl  _mint_fetch_and_64_relaxed\n"
+"   .globl  "UND"mint_fetch_and_64_relaxed\n"
 #if MINT_CPU_ARM_THUMB && (MINT_CPU_ARM_VERSION != 6)
 "   .thumb\n"
-"   .thumb_func _mint_fetch_and_64_relaxed\n"
+"   .thumb_func "UND"mint_fetch_and_64_relaxed\n"
 #endif
-"_mint_fetch_and_64_relaxed:\n"
+UND"mint_fetch_and_64_relaxed:\n"
 "   push    {r4-r7}\n"
 "   mov     r5, r0\n"
 "   mov     r4, r1\n"
@@ -253,12 +262,12 @@ __asm__(
 __asm__(
 "   .text\n"
 "   .align  2\n"
-"   .globl  _mint_fetch_or_64_relaxed\n"
+"   .globl  "UND"mint_fetch_or_64_relaxed\n"
 #if MINT_CPU_ARM_THUMB && (MINT_CPU_ARM_VERSION != 6)
 "   .thumb\n"
-"   .thumb_func _mint_fetch_or_64_relaxed\n"
+"   .thumb_func "UND"mint_fetch_or_64_relaxed\n"
 #endif
-"_mint_fetch_or_64_relaxed:\n"
+UND"mint_fetch_or_64_relaxed:\n"
 "   push    {r4-r7}\n"
 "   mov     r5, r0\n"
 "   mov     r4, r1\n"
