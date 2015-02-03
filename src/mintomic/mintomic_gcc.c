@@ -1,7 +1,7 @@
 #include <mintomic/core.h>
 
 // When compiling for ELF format, there are no leading underscores on C symbol names.
-// For other formats, such as a.out (used on iOS), a leading underscore is expected.
+// For other formats, a leading underscore is expected.
 // http://www.nasm.us/doc/nasmdoc9.html
 #if __ELF__
    #define UND
