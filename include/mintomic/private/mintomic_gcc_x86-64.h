@@ -43,7 +43,7 @@ extern "C" {
 //----------------------------------------------
 //  32-bit atomic operations
 //----------------------------------------------
-MINT_C_INLINE uint32_t mint_load_32_relaxed(mint_atomic32_t *object)
+MINT_C_INLINE uint32_t mint_load_32_relaxed(const mint_atomic32_t *object)
 {
     return object->_nonatomic;
 }
@@ -140,7 +140,7 @@ MINT_C_INLINE uint32_t mint_fetch_or_32_relaxed(mint_atomic32_t *object, uint32_
     //  64-bit atomic operations on 64-bit processor (x64)
     //------------------------------------------------------------------------
 
-    MINT_C_INLINE uint64_t mint_load_64_relaxed(mint_atomic64_t *object)
+    MINT_C_INLINE uint64_t mint_load_64_relaxed(const mint_atomic64_t *object)
     {
         // On x64, aligned 64-bit loads are already atomic.
         return object->_nonatomic;
@@ -214,7 +214,7 @@ MINT_C_INLINE uint32_t mint_fetch_or_32_relaxed(mint_atomic32_t *object, uint32_
     //  64-bit atomic operations on 32-bit processor (x86)
     //------------------------------------------------------------------------
 
-    MINT_C_INLINE uint64_t mint_load_64_relaxed(mint_atomic64_t *object)
+    MINT_C_INLINE uint64_t mint_load_64_relaxed(const mint_atomic64_t *object)
     {
         // On 32-bit x86, the most compatible way to get an atomic 64-bit load is with cmpxchg8b.
         // Essentially, we perform mint_compare_exchange_strong_64_relaxed(object, _dummyValue, _dummyValue).

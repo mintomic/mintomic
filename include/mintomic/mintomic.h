@@ -25,9 +25,9 @@ extern "C" {
 //  Pointer-sized atomic RMW operation wrappers
 //--------------------------------------------------------------
 #if MINT_PTR_SIZE == 4
-    MINT_C_INLINE void *mint_load_ptr_relaxed(mint_atomicPtr_t *object)
+    MINT_C_INLINE void *mint_load_ptr_relaxed(const mint_atomicPtr_t *object)
     {
-        return (void *) mint_load_32_relaxed((mint_atomic32_t *) object);
+        return (void *) mint_load_32_relaxed((const mint_atomic32_t *) object);
     }
     MINT_C_INLINE void mint_store_ptr_relaxed(mint_atomicPtr_t *object, void *desired)
     {
@@ -50,9 +50,9 @@ extern "C" {
         return (void *) mint_fetch_or_32_relaxed((mint_atomic32_t *) object, operand);
     }
 #elif MINT_PTR_SIZE == 8
-    MINT_C_INLINE void *mint_load_ptr_relaxed(mint_atomicPtr_t *object)
+    MINT_C_INLINE void *mint_load_ptr_relaxed(const mint_atomicPtr_t *object)
     {
-        return (void *) mint_load_64_relaxed((mint_atomic64_t *) object);
+        return (void *) mint_load_64_relaxed((const mint_atomic64_t *) object);
     }
     MINT_C_INLINE void mint_store_ptr_relaxed(mint_atomicPtr_t *object, void *desired)
     {

@@ -60,7 +60,7 @@ extern "C" {
 //----------------------------------------------
 //  32-bit atomic operations
 //----------------------------------------------
-MINT_C_INLINE uint32_t mint_load_32_relaxed(mint_atomic32_t *object)
+MINT_C_INLINE uint32_t mint_load_32_relaxed(const mint_atomic32_t *object)
 {
     return object->_nonatomic;
 }
@@ -152,7 +152,7 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
 //  64-bit atomic operations
 //----------------------------------------------
 // Defined in mintomic_gcc.c
-uint64_t mint_load_64_relaxed(mint_atomic64_t *object);
+uint64_t mint_load_64_relaxed(const mint_atomic64_t *object);
 void mint_store_64_relaxed(mint_atomic64_t *object, uint64_t desired);
 uint64_t mint_compare_exchange_strong_64_relaxed(mint_atomic64_t *object, uint64_t expected, uint64_t desired);
 uint64_t mint_fetch_add_64_relaxed(mint_atomic64_t *object, int64_t operand);

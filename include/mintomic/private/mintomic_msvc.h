@@ -49,7 +49,7 @@ typedef struct { void *_nonatomic; } mint_atomicPtr_t;
 //----------------------------------------------
 //  32-bit atomic operations
 //----------------------------------------------
-MINT_C_INLINE uint32_t mint_load_32_relaxed(mint_atomic32_t *object)
+MINT_C_INLINE uint32_t mint_load_32_relaxed(const mint_atomic32_t *object)
 {
     return object->_nonatomic;
 }
@@ -88,7 +88,7 @@ MINT_C_INLINE uint32_t mint_fetch_or_32_relaxed(mint_atomic32_t *object, uint32_
 //----------------------------------------------
 //  64-bit atomic operations
 //----------------------------------------------
-MINT_C_INLINE uint64_t mint_load_64_relaxed(mint_atomic64_t *object)
+MINT_C_INLINE uint64_t mint_load_64_relaxed(const mint_atomic64_t *object)
 {
 #if MINT_CPU_X64 || MINT_TARGET_XBOX_360
     return object->_nonatomic;
