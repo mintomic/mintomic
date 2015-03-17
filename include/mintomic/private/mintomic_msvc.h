@@ -138,7 +138,21 @@ MINT_C_INLINE uint64_t mint_compare_exchange_strong_64_relaxed(mint_atomic64_t *
 
 MINT_C_INLINE uint64_t mint_exchange_64_relaxed(mint_atomic64_t *object, uint64_t desired)
 {
+#if MINT_CPU_X64 || MINT_TARGET_XBOX_360
     return _InterlockedExchange64((LONGLONG *) object, desired);
+#else
+    // It would be cool to check the zero flag, which is set by lock cmpxchg8b, to know whether the CAS succeeded,
+    // but that would require an __asm block, which forces us to move the result to a stack variable.
+    // Let's just re-compare the result with the original instead.
+    uint64_t expected = object->_nonatomic;
+    for (;;)
+    {
+        uint64_t original = _InterlockedCompareExchange64((LONGLONG *) object, desired, expected);
+        if (original == expected)
+            return original;
+        expected = original;
+    }
+#endif
 }
 
 MINT_C_INLINE uint64_t mint_fetch_add_64_relaxed(mint_atomic64_t *object, int64_t operand)
@@ -146,9 +160,6 @@ MINT_C_INLINE uint64_t mint_fetch_add_64_relaxed(mint_atomic64_t *object, int64_
 #if MINT_CPU_X64 || MINT_TARGET_XBOX_360
     return _InterlockedExchangeAdd64((LONGLONG *) object, operand);
 #else
-    // It would be cool to check the zero flag, which is set by lock cmpxchg8b, to know whether the CAS succeeded,
-    // but that would require an __asm block, which forces us to move the result to a stack variable.
-    // Let's just re-compare the result with the original instead.
     uint64_t expected = object->_nonatomic;
     for (;;)
     {
