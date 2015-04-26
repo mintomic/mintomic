@@ -75,8 +75,8 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
     object->_nonatomic = desired;
 }
 
-#if (MINT_CPU_ARM_VERSION <= 6) && MINT_CPU_ARM_THUMB
-    // When compiling for ARMv4/5/6 in Thumb mode, the ldrex/strex/swp instructions are not available.
+#if (MINT_CPU_ARM_VERSION == 6) && MINT_CPU_ARM_THUMB
+    // When compiling for ARMv6 in Thumb mode, the ldrex/strex instructions are not available.
     // We need to switch to ARM mode, by calling standalone functions, to use these instructions.
     uint32_t mint_compare_exchange_strong_32_relaxed(mint_atomic32_t *object, uint32_t expected, uint32_t desired);
     uint32_t mint_fetch_add_32_relaxed(mint_atomic32_t *object, int32_t operand);
@@ -88,42 +88,16 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
     // lock free, however we can stripe the spinlocks using a hash of the protected location to help reduce
     // contention compared with a single global lock.  The locks will be unique to each module they are linked
     // in to (executable or shared library), so care must be taken if sharing atomic variables between modules.
-    #define MINT_GLOBAL_STRIPED_SPINLOCK_BITS           10
-    #define MINT_GLOBAL_STRIPED_SPINLOCK_COUNT          (1 << MINT_GLOBAL_STRIPED_SPINLOCK_BITS)
-    #define MINT_GLOBAL_STRIPED_SPINLOCK_HASH(value)    ((size_t) (value) >> 4) & (MINT_GLOBAL_STRIPED_SPINLOCK_COUNT - 1)
-    
-    extern uint32_t mint_globalStripedSpinLocks[MINT_GLOBAL_STRIPED_SPINLOCK_COUNT];
+    // In this case, mintomic_gcc.c should be built as a single shared library to which other modules can link,
+    // thus ensuring a single set of shared locks.
+    #define MINT_GLOBAL_STRIPED_SPINLOCK_COUNT  1024
 
-    MINT_C_INLINE uint32_t *mint_acquireGlobalSpinLock(void *object)
-    {
-        uint32_t *lock;
-        uint32_t temp;
-
-        // Hash the object address to come up with a lock index
-        lock = mint_globalStripedSpinLocks + MINT_GLOBAL_STRIPED_SPINLOCK_HASH(object);
-        asm volatile("       mov     %0, #1\n"
-                     "1:     swp     %0, %0, [%1]\n"
-                     "       cmp     %0, #1\n"
-                     "       beq     1b\n"
-                     : "=&r"(temp),
-                     : "r"(lock),
-                     : "cc", "memory");
-        return lock;
-    }
-
-    MINT_C_INLINE void mint_releaseGlobalSpinLock(uint32_t *lock)
-    {
-        uint32_t temp;
-        asm volatile("       mov     %0, #0\n"
-                     "       str     %0, [%1]\n"
-                     : "=&r"(temp),
-                     : "r"(lock)),
-                     : "memory");
-    );
+    uint8_t *mint_acquireGlobalSpinLock(void *object);
+    void mint_releaseGlobalSpinLock(uint8_t *lock);
 
     MINT_C_INLINE uint32_t mint_compare_exchange_strong_32_relaxed(mint_atomic32_t *object, uint32_t expected, uint32_t desired)
     {
-        uint32_t *lock;
+        uint8_t *lock;
         uint32_t original;
 
         lock = mint_acquireGlobalSpinLock(object);
@@ -138,7 +112,7 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
 
     MINT_C_INLINE uint32_t mint_fetch_add_32_relaxed(mint_atomic32_t *object, int32_t operand)
     {
-        uint32_t *lock;
+        uint8_t *lock;
         uint32_t original;
 
         lock = mint_acquireGlobalSpinLock(object);
@@ -150,7 +124,7 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
     
     MINT_C_INLINE uint32_t mint_fetch_and_32_relaxed(mint_atomic32_t *object, uint32_t operand)
     {
-        uint32_t *lock;
+        uint8_t *lock;
         uint32_t original;
         
         lock = mint_acquireGlobalSpinLock(object);
@@ -162,7 +136,7 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
 
     MINT_C_INLINE uint32_t mint_fetch_or_32_relaxed(mint_atomic32_t *object, uint32_t operand)
     {
-        uint32_t *lock;
+        uint8_t *lock;
         uint32_t original;
         
         lock = mint_acquireGlobalSpinLock(object);
@@ -241,18 +215,93 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
     }
 #endif
 
-
 //----------------------------------------------
 //  64-bit atomic operations
 //----------------------------------------------
-// Defined in mintomic_gcc.c
-uint64_t mint_load_64_relaxed(const mint_atomic64_t *object);
-void mint_store_64_relaxed(mint_atomic64_t *object, uint64_t desired);
-uint64_t mint_compare_exchange_strong_64_relaxed(mint_atomic64_t *object, uint64_t expected, uint64_t desired);
-uint64_t mint_fetch_add_64_relaxed(mint_atomic64_t *object, int64_t operand);
-uint64_t mint_fetch_and_64_relaxed(mint_atomic64_t *object, uint64_t operand);
-uint64_t mint_fetch_or_64_relaxed(mint_atomic64_t *object, uint64_t operand);
+#if MINT_CPU_ARM_VERSION == 4
+    // For ARMv4/5 the 64-bit atomic operations can be inlined because the lock/unlock functions are the only
+    // ones containing assembly code.
+    MINT_C_INLINE uint64_t mint_load_64_relaxed(const mint_atomic64_t *object)
+    {
+        uint8_t *lock;
+        uint64_t value;
 
+        lock = mint_acquireGlobalSpinLock(object);
+        value = object->_nonatomic;
+        mint_releaseGlobalSpinLock(lock);
+        return value;
+    }
+
+    MINT_C_INLINE void mint_store_64_relaxed(mint_atomic64_t *object, uint64_t desired)
+    {
+        uint8_t *lock;
+        uint64_t value;
+
+        lock = mint_acquireGlobalSpinLock(object);
+        object->_nonatomic = desired;
+        mint_releaseGlobalSpinLock(lock);
+    }
+
+    MINT_C_INLINE uint64_t mint_compare_exchange_strong_64_relaxed(mint_atomic64_t *object, uint64_t expected, uint64_t desired)
+    {
+        uint8_t *lock;
+        uint64_t original;
+
+        lock = mint_acquireGlobalSpinLock(object);
+        original = *object;
+        if (original == expected)
+        {
+            *object = desired;
+        }
+        mint_releaseGlobalSpinLock(lock);
+        return original;
+    }
+
+    MINT_C_INLINE uint64_t mint_fetch_add_64_relaxed(mint_atomic64_t *object, int64_t operand)
+    {
+        uint8_t *lock;
+        uint64_t original;
+
+        lock = mint_acquireGlobalSpinLock(object);
+        original = *object;
+        *object = original + operand;
+        mint_releaseGlobalSpinLock(lock);
+        return original;
+    }
+    
+    MINT_C_INLINE uint64_t mint_fetch_and_64_relaxed(mint_atomic64_t *object, uint64_t operand)
+    {
+        uint8_t *lock;
+        uint64_t original;
+        
+        lock = mint_acquireGlobalSpinLock(object);
+        original = *object;
+        *object = original & operand;
+        mint_releaseGlobalSpinLock(lock);
+        return original;
+    }
+
+    MINT_C_INLINE uint64_t mint_fetch_or_64_relaxed(mint_atomic64_t *object, uint64_t operand)
+    {
+        uint8_t *lock;
+        uint64_t original;
+        
+        lock = mint_acquireGlobalSpinLock(object);
+        original = *object;
+        *object = original | operand;
+        mint_releaseGlobalSpinLock(lock);
+        return original;
+    }
+
+#else
+    // Defined in mintomic_gcc.c
+    uint64_t mint_load_64_relaxed(const mint_atomic64_t *object);
+    void mint_store_64_relaxed(mint_atomic64_t *object, uint64_t desired);
+    uint64_t mint_compare_exchange_strong_64_relaxed(mint_atomic64_t *object, uint64_t expected, uint64_t desired);
+    uint64_t mint_fetch_add_64_relaxed(mint_atomic64_t *object, int64_t operand);
+    uint64_t mint_fetch_and_64_relaxed(mint_atomic64_t *object, uint64_t operand);
+    uint64_t mint_fetch_or_64_relaxed(mint_atomic64_t *object, uint64_t operand);
+#endif
 
 #ifdef __cplusplus
 } // extern "C"

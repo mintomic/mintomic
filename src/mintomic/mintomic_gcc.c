@@ -9,6 +9,8 @@
    #define UND "_"
 #endif
 
+#define TO_STR(v)   #v
+
 #if MINT_COMPILER_GCC && MINT_CPU_ARM && (MINT_CPU_ARM_VERSION == 6) && MINT_CPU_ARM_THUMB  // ARMv6 Thumb mode
 
 //----------------------------------------------------------------------------
@@ -106,7 +108,7 @@ UND"mint_fetch_or_32_relaxed:\n"
 
 #endif  // ARMv6 Thumb mode
 
-#if MINT_COMPILER_GCC && MINT_CPU_ARM  // 64-bit atomics
+#if MINT_COMPILER_GCC && MINT_CPU_ARM && (MINT_CPU_ARM_VERSION >= 6)    // 64-bit atomics
 
 //----------------------------------------------------------------------------
 // Why not implement 64-bit atomics as inline assembly, like the 32-bit atomics?
@@ -283,3 +285,47 @@ UND"mint_fetch_or_64_relaxed:\n"
 );
 
 #endif  // 64-bit atomics
+
+#if MINT_COMPILER_GCC && MINT_CPU_ARM && (MINT_CPU_ARM_VERSION == 4)    // ARMv4/5 lock functions
+
+static uint8_t mint_globalStripedSpinlocks[MINT_GLOBAL_STRIPED_SPINLOCK_COUNT] = {0};
+
+__asm__(
+"   .text\n"
+"   .align  2\n"
+"   .globl  "UND"mint_acquireGlobalSpinLock\n"
+UND"mint_acquireGlobalSpinLock:\n"
+"   push    {r4-r5}\n"
+// Calculate spinlock entry address
+"   ldr     r4, =" TO_STR(MINT_GLOBAL_STRIPED_SPINLOCK_COUNT) " - 1\n"
+"   and     r4, r4, r0, LSR #4\n"
+"   ldr     r5, =%0\n"
+"   add     r0, r4, r5\n"
+// Acquire spinlock
+"   mov     r5, #1\n"
+"1:\n"
+"   swpb    r5, r5, [r0]\n"
+"   cmp     r5, #1\n"
+"   beq     1b\n"
+// Return
+"   pop     {r4-r5}\n"
+"   bx      lr\n"
+:
+: "o"(&mint_globalStripedSpinlocks)
+);
+
+__asm__(
+"   .text\n"
+"   .align  2\n"
+"   .globl  "UND"mint_releaseGlobalSpinLock\n"
+UND"mint_releaseGlobalSpinLock:\n"
+"   push    {r4}\n"
+// Release spinlock
+"   mov     r4, #1\n"
+"   str     r4, [r0]\n"
+// Return
+"   pop     {r4}\n"
+"   bx      lr\n"
+);
+
+#endif  // ARMv4/5 lock functions
