@@ -63,8 +63,7 @@
             // ARMv6
             #define MINT_CPU_ARM_VERSION 6
             #define MINT_PTR_SIZE 4
-        #elif defined(__ARM_ARCH_5__) || defined(__ARM_ARCH_5E__) || defined(__ARM_ARCH_5T__) || defined(__ARM_ARCH_5TE__) || defined(__ARM_ARCH_5TEJ__) ||
-                defined(__ARM_ARCH_4__) || defined(__ARM_ARCH_4T__)
+        #elif defined(__ARM_ARCH_5__) || defined(__ARM_ARCH_5E__) || defined(__ARM_ARCH_5T__) || defined(__ARM_ARCH_5TE__) || defined(__ARM_ARCH_5TEJ__) || defined(__ARM_ARCH_4__) || defined(__ARM_ARCH_4T__)
             // ARMv4 or ARMv5
             #define MINT_CPU_ARM_VERSION 4
             #define MINT_PTR_SIZE 4

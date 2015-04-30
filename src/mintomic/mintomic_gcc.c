@@ -1,4 +1,4 @@
-#include <mintomic/core.h>
+#include <mintomic/mintomic.h>
 
 // When compiling for ELF format, there are no leading underscores on C symbol names.
 // For other formats, a leading underscore is expected.
