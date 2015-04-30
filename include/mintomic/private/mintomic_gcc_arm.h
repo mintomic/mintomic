@@ -90,9 +90,9 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
     // in to (executable or shared library), so care must be taken if sharing atomic variables between modules.
     // In this case, mintomic_gcc.c should be built as a single shared library to which other modules can link,
     // thus ensuring a single set of shared locks.
-    #define MINT_GLOBAL_STRIPED_SPINLOCK_COUNT  1024
+    // Apparently this may not work on StrongARM processors, where the swp instruction is broken.
 
-    uint8_t *mint_acquireGlobalSpinLock(void *object);
+    uint8_t *mint_acquireGlobalSpinLock(const void *object);
     void mint_releaseGlobalSpinLock(uint8_t *lock);
 
     MINT_C_INLINE uint32_t mint_compare_exchange_strong_32_relaxed(mint_atomic32_t *object, uint32_t expected, uint32_t desired)
@@ -101,10 +101,10 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
         uint32_t original;
 
         lock = mint_acquireGlobalSpinLock(object);
-        original = *object;
+        original = object->_nonatomic;
         if (original == expected)
         {
-            *object = desired;
+            object->_nonatomic = desired;
         }
         mint_releaseGlobalSpinLock(lock);
         return original;
@@ -116,8 +116,8 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
         uint32_t original;
 
         lock = mint_acquireGlobalSpinLock(object);
-        original = *object;
-        *object = original + operand;
+        original = object->_nonatomic;
+        object->_nonatomic = original + operand;
         mint_releaseGlobalSpinLock(lock);
         return original;
     }
@@ -128,8 +128,8 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
         uint32_t original;
         
         lock = mint_acquireGlobalSpinLock(object);
-        original = *object;
-        *object = original & operand;
+        original = object->_nonatomic;
+        object->_nonatomic = original & operand;
         mint_releaseGlobalSpinLock(lock);
         return original;
     }
@@ -140,8 +140,8 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
         uint32_t original;
         
         lock = mint_acquireGlobalSpinLock(object);
-        original = *object;
-        *object = original | operand;
+        original = object->_nonatomic;
+        object->_nonatomic = original | operand;
         mint_releaseGlobalSpinLock(lock);
         return original;
     }
@@ -248,10 +248,10 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
         uint64_t original;
 
         lock = mint_acquireGlobalSpinLock(object);
-        original = *object;
+        original = object->_nonatomic;
         if (original == expected)
         {
-            *object = desired;
+            object->_nonatomic = desired;
         }
         mint_releaseGlobalSpinLock(lock);
         return original;
@@ -263,8 +263,8 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
         uint64_t original;
 
         lock = mint_acquireGlobalSpinLock(object);
-        original = *object;
-        *object = original + operand;
+        original = object->_nonatomic;
+        object->_nonatomic = original + operand;
         mint_releaseGlobalSpinLock(lock);
         return original;
     }
@@ -275,8 +275,8 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
         uint64_t original;
         
         lock = mint_acquireGlobalSpinLock(object);
-        original = *object;
-        *object = original & operand;
+        original = object->_nonatomic;
+        object->_nonatomic = original & operand;
         mint_releaseGlobalSpinLock(lock);
         return original;
     }
@@ -287,8 +287,8 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
         uint64_t original;
         
         lock = mint_acquireGlobalSpinLock(object);
-        original = *object;
-        *object = original | operand;
+        original = object->_nonatomic;
+        object->_nonatomic = original | operand;
         mint_releaseGlobalSpinLock(lock);
         return original;
     }
