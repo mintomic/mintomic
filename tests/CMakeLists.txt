@@ -51,7 +51,7 @@ function(AddMintomicTests template)
 
             set(TEST_ENTRY_FUNCS "${TEST_ENTRY_FUNCS}TestEntryFunc ${TEST_FUNC};\n")
             foreach(numThreads IN ITEMS ${THREAD_COUNTS})
-                set(TEST_INFOS "${TEST_INFOS}    { \"${TEST_FUNC} x ${numThreads}\", ${TEST_FUNC}, ${numThreads}, ${TEST_FORCE_FAIL} },\n")
+                set(TEST_INFOS "${TEST_INFOS}    { \"${TEST_FUNC} x ${numThreads}\", ${TEST_FUNC}, ${numThreads}, ${TEST_FORCE_FAIL}, false },\n")
             endforeach()
         endforeach()
     endforeach()
