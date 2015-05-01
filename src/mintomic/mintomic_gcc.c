@@ -291,7 +291,7 @@ UND"mint_fetch_or_64_relaxed:\n"
 #define TO_STR(v)       #v
 #define TO_STRM(m)      TO_STR(m)
 
-static uint8_t mint_globalStripedSpinlocks[MINT_GLOBAL_STRIPED_SPINLOCK_COUNT] = {0};
+static uint8_t mint_globalStripedSpinlocks[MINT_GLOBAL_STRIPED_SPINLOCK_COUNT] __attribute__ ((aligned (4))) = {0};
 
 __asm__(
 "   .text\n"
@@ -300,7 +300,6 @@ __asm__(
 UND"mint_acquireGlobalSpinLock:\n"
 "   push    {r4-r5}\n"
 // Calculate spinlock entry address
-// "   ldr     r4, =1024 - 1\n"
 "   ldr     r4, =" TO_STRM(MINT_GLOBAL_STRIPED_SPINLOCK_COUNT) " - 1\n"
 "   and     r4, r4, r0, LSR #4\n"
 "   ldr     r5, =mint_globalStripedSpinlocks\n"
@@ -324,7 +323,7 @@ UND"mint_releaseGlobalSpinLock:\n"
 "   push    {r4}\n"
 // Release spinlock
 "   mov     r4, #0\n"
-"   str     r4, [r0]\n"
+"   strb    r4, [r0]\n"
 // Return
 "   pop     {r4}\n"
 "   bx      lr\n"
