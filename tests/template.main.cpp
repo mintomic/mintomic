@@ -87,6 +87,10 @@ int main(int argc, char **argv)
                 {
                     g_maxMemKb = -1;
                 }
+                else
+                {
+                    printf("Using iterative memory limit of %d KB.\n", g_maxMemKb);
+                }
                 continue;
             }
 
