@@ -235,7 +235,6 @@ MINT_C_INLINE void mint_store_32_relaxed(mint_atomic32_t *object, uint32_t desir
     MINT_C_INLINE void mint_store_64_relaxed(mint_atomic64_t *object, uint64_t desired)
     {
         uint8_t *lock;
-        uint64_t value;
 
         lock = mint_acquireGlobalSpinLock(object);
         object->_nonatomic = desired;
