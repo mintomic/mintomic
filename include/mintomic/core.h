@@ -7,7 +7,7 @@
 #if MINT_HAS_STDINT
     #include <stdint.h>
 #else
-    #include "private/stdint.h"
+    #include "private/mintomic_stdint.h"
 #endif
 
 #if MINT_COMPILER_MSVC
