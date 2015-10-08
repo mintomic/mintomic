@@ -1,6 +1,8 @@
 #include <mintomic/mintomic.h>
 #include <mintpack/threadsynchronizer.h>
+#include <stdio.h>
 
+extern int g_maxMemKb;
 
 struct Node
 {
@@ -8,10 +10,11 @@ struct Node
 };
 
 static mint_atomicPtr_t g_head;
+static int g_iterations = 2000000;
 
 static void threadFunc(int threadNum)
 {
-    for (int i = 0; i < 2000000; i++)
+    for (int i = 0; i < g_iterations; i++)
     {
         Node* insert = new Node;
         Node* h;
@@ -26,6 +29,15 @@ static void threadFunc(int threadNum)
 
 bool ${TEST_FUNC}(int numThreads)
 {
+    if (g_maxMemKb > 1)
+    {
+        int iter = (g_maxMemKb * 1024 / sizeof(Node)) / numThreads;
+        if (iter < g_iterations)
+        {
+            g_iterations = iter;
+        }
+    }
+
     g_head._nonatomic = NULL;
     ThreadSynchronizer threads(numThreads);
     threads.run(threadFunc);
@@ -40,5 +52,6 @@ bool ${TEST_FUNC}(int numThreads)
         delete t;
         count++;
     }
-    return count == 2000000 * numThreads;
+
+    return count == g_iterations * numThreads;
 }
