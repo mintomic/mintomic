@@ -25,6 +25,27 @@ extern "C" {
 //  Pointer-sized atomic RMW operation wrappers
 //--------------------------------------------------------------
 #if MINT_PTR_SIZE == 4
+    typedef mint_atomic32_t mint_atomic_t;
+    MINT_C_INLINE uint32_t mint_fetch_add_relaxed( mint_atomic_t * object, int32_t value )	
+    {
+        return mint_fetch_add_32_relaxed( object, value );
+    }
+    MINT_C_INLINE uint32_t mint_load_relaxed( mint_atomic_t * object )
+    {
+        return mint_load_32_relaxed( object );
+    }
+    MINT_C_INLINE void mint_store_relaxed( mint_atomic_t * object, int32_t value )
+    {
+        mint_store_32_relaxed( object, value );
+    }
+    MINT_C_INLINE size_t mint_exchange_relaxed( mint_atomic_t * object, (size_t)desired )
+    {
+        return mint_exchange_32_relaxed( (mint_atomic32_t*)object, desired );
+    }
+    MINT_C_INLINE size_t mint_compare_exchange_strong_relaxed(mint_atomic_t *object, size_t expected, size_t desired)
+    {
+        return mint_compare_exchange_strong_32_relaxed((mint_atomic32_t *) object, expected, desired);
+    }
     MINT_C_INLINE void *mint_load_ptr_relaxed(const mint_atomicPtr_t *object)
     {
         return (void *) mint_load_32_relaxed((const mint_atomic32_t *) object);
@@ -32,6 +53,10 @@ extern "C" {
     MINT_C_INLINE void mint_store_ptr_relaxed(mint_atomicPtr_t *object, void *desired)
     {
         mint_store_32_relaxed((mint_atomic32_t *) object, (size_t) desired);
+    }
+    MINT_C_INLINE void *mint_exchange_ptr_relaxed( mint_atomicPtr_t * object, void * desired )
+    {
+        return (void*)mint_exchange_32_relaxed( (mint_atomic32_t*)object, (size_t)desired );
     }
     MINT_C_INLINE void *mint_compare_exchange_strong_ptr_relaxed(mint_atomicPtr_t *object, void *expected, void *desired)
     {
@@ -50,6 +75,27 @@ extern "C" {
         return (void *) mint_fetch_or_32_relaxed((mint_atomic32_t *) object, operand);
     }
 #elif MINT_PTR_SIZE == 8
+    typedef mint_atomic64_t mint_atomic_t;
+    MINT_C_INLINE uint64_t mint_fetch_add_relaxed( mint_atomic_t * object, int64_t value )	
+    {
+    return mint_fetch_add_64_relaxed( object, value );
+    }
+    MINT_C_INLINE uint64_t mint_load_relaxed( mint_atomic_t * object )
+    {
+        return mint_load_64_relaxed( object );
+    }
+    MINT_C_INLINE void mint_store_relaxed( mint_atomic_t * object, int64_t value )
+    {
+        mint_store_64_relaxed( object, value );
+    }
+    MINT_C_INLINE size_t mint_exchange_relaxed( mint_atomic_t * object, (size_t)desired )
+    {
+        return mint_exchange_64_relaxed( (mint_atomic64_t*)object, desired );
+    }
+    MINT_C_INLINE size_t mint_compare_exchange_strong_relaxed(mint_atomic_t *object, size_t expected, size_t desired)
+    {
+        return mint_compare_exchange_strong_64_relaxed((mint_atomic64_t *) object, expected, desired);
+    }
     MINT_C_INLINE void *mint_load_ptr_relaxed(const mint_atomicPtr_t *object)
     {
         return (void *) mint_load_64_relaxed((const mint_atomic64_t *) object);
@@ -57,6 +103,10 @@ extern "C" {
     MINT_C_INLINE void mint_store_ptr_relaxed(mint_atomicPtr_t *object, void *desired)
     {
         mint_store_64_relaxed((mint_atomic64_t *) object, (size_t) desired);
+    }    
+    MINT_C_INLINE void *mint_exchange_ptr_relaxed( mint_atomicPtr_t * object, void * desired )
+    {
+        return (void*)mint_exchange_64_relaxed( (mint_atomic64_t*)object, (size_t)desired );
     }
     MINT_C_INLINE void *mint_compare_exchange_strong_ptr_relaxed(mint_atomicPtr_t *object, void *expected, void *desired)
     {
